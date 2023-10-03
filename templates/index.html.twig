@@ -12,9 +12,16 @@ Global Variable ===== <b>{{ AUTHOR_NAME | upper }}</b>
 
 {# this block is for movies list page #}
     {% if display == "movie-list" %}
-        {% for movie in movies_list %}
-            <li>{{ movie }}</li>
-        {% endfor %}
+         <ul>
+            {% for movie in movies_list %}
+                <li>
+                    <h3>{{ movie.title }}</h3>
+                    <p>Release Year: {{ movie.releaseYear }}</p>
+                    <p>Description: {{ movie.description }}</p>
+                    <img src="{{ movie.imagePath }}" alt="{{ movie.title }}" width="200">
+                </li>
+            {% endfor %}
+        </ul>
     {% endif %}
 
 {# this block is for movies details page #}

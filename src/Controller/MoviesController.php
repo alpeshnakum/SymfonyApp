@@ -31,8 +31,8 @@ class MoviesController extends AbstractController
     #[Route('/movies', name: 'app_movies')]
     public function oldMethod(): Response
     {
-        // findAll() -> SLEECT * FROM movies;
-        // find(11) -> SLEECT * FROM movies WHERE id=11;
+        // findAll() -> SLEECT * FROM movies
+        // find(11) -> SLEECT * FROM movies WHERE id=11
         // findBy(['title' => 'The Dark Knight', 'column-name' => 'value'], [id => 'DESC'])
         // findBy([], ['title' => 'DESC']) ==== sort by
         // count([]) ==== number of rows from the result
@@ -40,8 +40,11 @@ class MoviesController extends AbstractController
 
         $repository = $this->em->getRepository(Movie::class); //Movie::class is name of entity
         $movies = $repository->findBy([], ['title' => 'DESC']);
-        dd($movies);
 
-        return $this->render('index.html.twig');
+
+        return $this->render('index.html.twig', [
+            "display" => "movie-list",
+            'movies_list' => $movies
+        ]);
     }
 }
