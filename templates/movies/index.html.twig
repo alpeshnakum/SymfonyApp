@@ -8,9 +8,15 @@
 
 
 	<div class="container" style="margin-top: 80px !important">
-		<h2>Movies
+		<h2 style="text-align: center;">Movies
 			({{ movies|length }})</h2>
-
+			<hr>
+		<div class="create-button">
+			<a href="/movie/create" class="btn btn-primary">
+				Add New Movie
+			</a>
+		</div>
+		<hr style="visibility: hidden;">
 		<div class="row row-cols-1 row-cols-md-3 g-4">
 			{% for movie in movies %}
 				<div class="col">

@@ -6,7 +6,18 @@
 
 {% block body %}
 
-<h1>this is create page</h1>
-	
+	<div class="container" style="margin-top: 80px !important">
+		<section class="movie-create-section">
+			<h1>Add New Movie</h1>
 
+			{{ form_start(createMovieForm) }}
+
+			{{ form_widget(createMovieForm) }}
+
+			<button type="submit" class="btn btn-primary">Add Movie</button>
+
+			{{ form_end(createMovieForm) }}
+
+		</section>
+	</div>
 {% endblock %}

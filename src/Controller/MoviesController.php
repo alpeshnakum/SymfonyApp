@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Form\MovieFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -63,8 +66,44 @@ class MoviesController extends AbstractController
         ]);
     }
 
-    #[Route('/movie/{id}', name: 'app_movie_detail', defaults: ['id' => null])]
+    #[Route('/movie/create', name: 'app_movie_create')]
+    public function movieCreate(Request $request): Response
+    {
+        $newMovie = new Movie();
+        $movieForm = $this->createForm(MovieFormType::class, $newMovie);
 
+        $movieForm->handleRequest($request);
+        if ($movieForm->isSubmitted() && $movieForm->isValid()) {
+            $newMovieToAdd = $movieForm->getData();
+            $imagePath = $movieForm->get('imagePath')->getData();
+
+            if ($imagePath) {
+                $newImageName = uniqid() . '.' . $imagePath->guessExtension(); // new name for uploaded file
+
+                try{
+                    $imagePath->move(
+                        $this->getParameter('kernel.project_dir') . '/public/uploads',
+                        $newImageName
+                    );
+                } catch (FileException $e) {
+                    return new Response($e->getMessage());
+                }
+
+                $newMovie->setImagePath('/uploads/' . $newImageName);
+            }
+
+            $this->em->persist($newMovie);
+            $this->em->flush();
+
+            return $this->redirect('/movies');
+        }
+
+        return $this->render('/movies/create.html.twig', [
+            'createMovieForm' => $movieForm->createView()
+        ]);
+    }
+
+    #[Route('/movie/{id}', name: 'app_movie_detail', defaults: ['id' => null])]
     public function movieDetails($id): Response
     {
         $repository = $this->em->getRepository(Movie::class);
