@@ -1,35 +1,46 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Movies Page
+	Movies Page
 {% endblock %}
 
 {% block body %}
 
-{# {{ dump(display) }} #}
-<h2>Template name is {{ _self }}</h2>
-Global Variable ===== <b>{{ AUTHOR_NAME | upper }}</b>
+	<div class="image-viewer">
+			<img src="{{ asset('build/images/image1.49d08a9a.png') }}" alt="">
+		</div>
+	
+		<h2>Template name is
+			{{ _self }}</h2>
+		Global Variable =====
+		<b>{{ AUTHOR_NAME | upper }}</b>
+	
+	
+		Display list
+		{% if display == "movie-list" %}
+			<ul>
+				{% for movie in movies_list %}
+					<li>
+						<h3>{{ movie.title }}</h3>
+						<p>Release Year:
+							{{ movie.releaseYear }}</p>
+						<p>Description:
+							{{ movie.description }}</p>
+						<img src="{{ movie.imagePath }}" alt="{{ movie.title }}" width="200">
+					</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	
+	
+		Display details
+		{% if display == "movie-detail" %}
+			{% if movieTitle %}
+				<h1>{{ movieTitle }}</h1>
+			{% else %}
+				<h1>No movie name</h1>
+			{% endif %}
+		{% endif %}
 
-{# this block is for movies list page #}
-    {% if display == "movie-list" %}
-         <ul>
-            {% for movie in movies_list %}
-                <li>
-                    <h3>{{ movie.title }}</h3>
-                    <p>Release Year: {{ movie.releaseYear }}</p>
-                    <p>Description: {{ movie.description }}</p>
-                    <img src="{{ movie.imagePath }}" alt="{{ movie.title }}" width="200">
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
 
-{# this block is for movies details page #}
-    {% if display == "movie-detail" %}
-        {% if movieTitle %}
-            <h1>{{ movieTitle }}</h1>
-        {% else %}
-            <h1>No movie name</h1>
-        {% endif %}
-    {% endif %}
 {% endblock %}

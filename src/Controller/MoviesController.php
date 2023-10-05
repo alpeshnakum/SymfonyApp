@@ -17,9 +17,9 @@ class MoviesController extends AbstractController
     }
 
     // In route there is no need to specify methods by default it will take needed method.
-    #[Route('/movie/{movie_name}', name: 'app_movie', defaults: ['movie_name' => null])]
+    #[Route('/movieTemp/{movie_name}', name: 'movie_detail', defaults: ['movie_name' => null])]
 
-    public function index($movie_name): Response
+    public function fn_MoviesDetail($movie_name): Response
     {
         return $this->render('index.html.twig', [
             "display" => "movie-detail",
@@ -28,8 +28,8 @@ class MoviesController extends AbstractController
     }
 
     // below is the systamic way to display data.
-    #[Route('/movies', name: 'app_movies')]
-    public function oldMethod(): Response
+    #[Route('/moviesTemp', name: 'move_list')]
+    public function fn_MoviesList(): Response
     {
         // findAll() -> SLEECT * FROM movies
         // find(11) -> SLEECT * FROM movies WHERE id=11
@@ -45,6 +45,33 @@ class MoviesController extends AbstractController
         return $this->render('index.html.twig', [
             "display" => "movie-list",
             'movies_list' => $movies
+        ]);
+    }
+
+    // ============================================================================
+
+    #[Route('/movies', name: 'app_movies')]
+    public function index(): Response
+    {
+
+        $repository = $this->em->getRepository(Movie::class);
+        $movies = $repository->findAll();
+
+
+        return $this->render('movies/index.html.twig', [
+            'movies' => $movies
+        ]);
+    }
+
+    #[Route('/movie/{id}', name: 'app_movie_detail', defaults: ['id' => null])]
+
+    public function movieDetails($id): Response
+    {
+        $repository = $this->em->getRepository(Movie::class);
+        $movie = $repository->find($id);
+
+        return $this->render('/movies/show.html.twig', [
+            'movie' => $movie
         ]);
     }
 }
